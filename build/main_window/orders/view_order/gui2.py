@@ -136,13 +136,15 @@ class ViewOrder(Frame):
             width=52.7611083984375,
             height=48.81919860839844
         )
-
+        
+        
     
 
         self.columns = {
             "id": ["No.", 5],
             "name": ["Customer No.", 5],
-            "order": ["Order", 280],
+            "order": ["Order", 380],
+            "total": ["Total Price", 40],
    
         }
         
@@ -165,8 +167,8 @@ class ViewOrder(Frame):
         )
 
         for idx, txt in self.columns.items():
-            self.treeview.heading(idx, text=txt[0])
-            self.treeview.column(idx, width=txt[1])
+            self.treeview.heading(idx, text=txt[0],anchor='center')
+            self.treeview.column(idx, width=txt[1],anchor='center')
 
         self.treeview.place(x=118.0, y=80.0, width=864, height=424)
         #self.treeview.place(x=40.0, y=101.0, width=700.0, height=229.0)
@@ -176,6 +178,11 @@ class ViewOrder(Frame):
 
          # Add selection event
         self.treeview.bind("<<TreeviewSelect>>", self.on_treeview_select)
+        
+        
+        
+        self.auto_refresh_interval = 2000
+        self.auto_refresh()
 
     def filter_treeview_records(self, query):
         self.treeview.delete(*self.treeview.get_children())
@@ -231,6 +238,12 @@ class ViewOrder(Frame):
         self.parent.navigate("edit")
         self.parent.windows["edit"].initialize()
         self.handle_refresh()
+        
+    
+    
+    def auto_refresh(self):
+        self.handle_refresh()
+        self.after(self.auto_refresh_interval, self.auto_refresh)
     
 
     

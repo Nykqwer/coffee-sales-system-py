@@ -24,10 +24,10 @@ try:
         return a
 
       # Add a order
-    def add_order(name,orders):
+    def add_order(name,orders,total_price):
         try:
-            query = "INSERT INTO ordertb (name, orders) VALUES (%s, %s)"
-            values = (name, orders)
+            query = "INSERT INTO ordertb (name, orders,total) VALUES (%s, %s, %s)"
+            values = (name, orders,total_price)
             cursor.execute(query, values)
             connection.commit()
             return True
@@ -37,7 +37,7 @@ try:
         
     def get_orders():
         try:
-            cmd = "SELECT id,name,orders FROM ordertb;"
+            cmd = "SELECT id,name,orders,total FROM ordertb;"
             cursor.execute(cmd)
 
             # Fetch the results

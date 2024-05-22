@@ -7,7 +7,7 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Frame, Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
+from tkinter import Frame, StringVar, Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
 from tkinter.ttk import Style, Treeview
 import controller as db_controller
 
@@ -34,6 +34,7 @@ class ViewInventory(Frame):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         self.selected_rid = None 
+        self.search_query = StringVar()
 
         self.configure(bg = "#FFFFFF")
 
@@ -106,24 +107,41 @@ class ViewInventory(Frame):
             height=42.0
         )
 
-        self.button_image_3 = PhotoImage(
-            file=relative_to_assets("button_3.png"))
-        self.ref_btn = Button(
-            self,
-            image=self.button_image_3,
-            borderwidth=0,
-            highlightthickness=0,
-            command=self.handle_refresh,
-            relief="flat"
-        )
-        self.ref_btn .place(
-            x=929.0,
-            y=27.0,
-            width=52.7611083984375,
-            height=48.81919860839844
+        self.image_image_5 = PhotoImage(
+            file=relative_to_assets("image_5.png"))
+        image_1 = canvas.create_image(
+            889.0,
+            47.0,
+            image=self.image_image_5
         )
 
+        entry_image_1 = PhotoImage(
+            file=relative_to_assets("entry_5.png"))
+        entry_bg_1 = canvas.create_image(
+            889.0,
+            47.0,
+            image=entry_image_1
+        )
+        entry_1 = Entry(
+            self,
+            bd=0,
+            bg="#EFEFEF",
+            fg="#000716",
+            highlightthickness=0,
+            textvariable=self.search_query
+        )
+        entry_1.place(
+            x=839.0,
+            y=40.2,
+            width=107.0,
+            height=22.0
+        )
      
+        entry_1.bind(
+            "<KeyRelease>",
+            lambda event: self.filter_treeview_records(self.search_query.get()),
+        )
+
 
         self.button_image_5 = PhotoImage(
             file=relative_to_assets("button_5.png"))
@@ -173,8 +191,8 @@ class ViewInventory(Frame):
         )
 
         for idx, txt in self.columns.items():
-            self.treeview.heading(idx, text=txt[0])
-            self.treeview.column(idx, width=txt[1])
+            self.treeview.heading(idx, text=txt[0],anchor='center')
+            self.treeview.column(idx, width=txt[1],anchor='center')
 
         self.treeview.place(x=118.0, y=80.0, width=864, height=424)
         #self.treeview.place(x=40.0, y=101.0, width=700.0, height=229.0)

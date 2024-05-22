@@ -27,7 +27,7 @@ class Menu(Frame):
     def __init__(self, parent, controller=None, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        self.data = {"name": StringVar(), "orders": StringVar()}
+        self.data = {"name": StringVar(), "orders": StringVar(), "total_price": StringVar()}
         #self.geometry("1100x589")
         self.configure(bg = "#FFFFFF")
         self.button_clicked = False
@@ -275,6 +275,7 @@ class Menu(Frame):
         else:
             print('error')
 
+
     def display_coffee_info(self):
         x_positions = [778.0, 948.0, 1033.0]
         y_position = 166.0  # Starting y-position
@@ -330,9 +331,7 @@ class Menu(Frame):
             y_position += 36
 
         self.entry_4.delete(1.0, END)  # Clear previous content
-        self.entry_4.insert(END,ordered_data)
-
-        
+        self.entry_4.insert(END, ordered_data)
 
         # Create or update the total price text object
         self.total_price_text = f"₱{total_price}"
@@ -348,9 +347,9 @@ class Menu(Frame):
                 font=("BreeSerif Regular", 14 * -1)
             )
             self.text_objects['total_price'] = total_price_obj
-        
 
-
+        # Include total price in the data as an integer
+        self.data["total_price"].set(total_price)
 
     def save(self):
         self.customer_name += 1
@@ -362,10 +361,10 @@ class Menu(Frame):
         self.data['name'].set(formatted_customer_name)
 
         # Get the text content from the Text widget
-        order_value = self.entry_4.get("1.0",END)  # Corrected get() call
+        order_value = self.entry_4.get("1.0", END)  # Corrected get() call
         self.data["orders"].set(order_value)
         
-        # check if any fields are empty
+        # Check if any fields are empty
         for val in self.data.values():
             if val.get() == "":
                 messagebox.showinfo("Error", "Please fill in all the fields")
@@ -373,18 +372,17 @@ class Menu(Frame):
 
         # Save the room
         result = db_controller.add_order(
-            *[self.data[label].get() for label in ("name", "orders")]
+            *[self.data[label].get() for label in ("name", "orders", "total_price")]
         )
 
         if result:
-            messagebox.showinfo("Success", "activity added successfully")
-
+            messagebox.showinfo("Success", "Activity added successfully")
             self.clear_displayed_data()
-    
         else:
             messagebox.showerror(
-                "Error", "Unable to activity. Please make sure the data is validated"
+                "Error", "Unable to add activity. Please make sure the data is validated"
             )
+
 
 
     def clear_displayed_data(self):
